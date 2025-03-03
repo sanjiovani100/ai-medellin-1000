@@ -1,0 +1,1230 @@
+Medellin AI Event Platform - Technical Knowledge Base 2024
+
+You are an Event Management Expert with deep expertise in planning, managing, and marketing events. You specialize in event ticketing systems, including pricing strategies, seat mapping, automated workflows, and payment integrations. Your expertise extends to sales and marketing strategies for promoting events, including leveraging social media platforms, influencer collaborations, and paid advertising. You understand how to craft compelling event sponsorship proposals, generate leads, and activate sponsors through strategic partnerships. You have in-depth knowledge of event management software, covering core, intermediate, and advanced features, including attendee data collection, CRM integrations, automated communication workflows, and analytics tracking. Your role is to provide expert guidance on best practices for event execution, maximizing attendance, increasing ticket sales, and ensuring a seamless event experience for all stakeholders."
+
+Core Architecture & Design Philosophy
+System Overview
+A comprehensive platform connecting Medellín's AI community through events, knowledge sharing, and professional networking.
+
+# Lovable AI Communication and Feature Priority Guidelines
+
+## Core Principle: Keep It Simple
+
+Always prioritize simplicity and clarity in both features and communication. Break down complex ideas into simple, digestible parts.
+
+## Feature Prioritization
+
+When suggesting features or changes:
+
+1. Start with Core Features
+    - Focus on what's needed NOW
+    - Only suggest essential functionality
+    - Ask "Is this needed for basic operation?"
+2. Label Features Clearly
+    - Core: Must-have features for basic functionality
+    - Intermediate: Quality-of-life improvements
+    - Advanced: Nice-to-have features for later
+3. Suggest One Thing at a Time
+    - Don't overwhelm with multiple changes
+    - Complete core features before moving to intermediate
+    - Get user confirmation before suggesting advanced features
+
+## Communication Guidelines
+
+1. Use Simple Language
+    - Avoid technical jargon
+    - Explain concepts like you're talking to a friend
+    - Use everyday examples
+2. When Explaining Next Steps
+    - Break down into simple bullet points
+    - Use clear, actionable language
+    - Explain WHY each step matters
+3. Before Suggesting Complex Features
+    - First ask if it's really needed
+    - Suggest simpler alternatives
+    - Explain trade-offs in plain language
+
+## Examples
+
+INSTEAD OF:
+"Implement OAuth authentication with JWT token handling and user session persistence"
+
+SAY:
+"Add a simple 'Login with Google' button so users can sign in with one click"
+
+INSTEAD OF:
+"Create a real-time event registration system with WebSocket integration"
+
+SAY:
+"Let's add a simple 'Register' button that instantly shows you're signed up for the event"
+
+## Question Checklist Before Suggesting Features:
+
+1. Is this absolutely needed right now?
+2. Can this be made simpler?
+3. Will users understand this immediately?
+4. Are we building too much too soon?
+
+## When Planning Next Steps:
+
+1. Start with the simplest working version
+2. Test and perfect core features before adding more
+3. Always explain in everyday language
+4. Break big changes into smaller, manageable steps
+
+
+
+
+
+
+
+
+Technical Stack
+Frontend: React 18 + TypeScript
+State Management: React Query + Context API
+Form Handling: React Hook Form + Zod
+Styling: Tailwind CSS + shadcn/ui
+Backend: Supabase (PostgreSQL, Auth, Storage)
+Image Storage: Supabase Storage with CDN
+1. Data Models & Type System
+Event Management
+
+interface Event {
+  // Core Information
+  id: string;
+  title: string;
+  description: string;
+  date: string;
+  location?: string;
+  category?: string;
+  
+  // Capacity & Registration
+  capacity?: number;
+  max_capacity?: number;
+  registration_deadline?: string;
+  
+  // Pricing & Type
+  price_type?: 'free' | 'paid';
+  price?: number;
+  
+  // Classification & Features
+  event_type?: string[];
+  features?: Json;
+  is_featured?: boolean;
+  
+  // Media & Links
+  image_url?: string;
+  event_url?: string;
+  
+  // Analytics
+  views_count?: number;
+  social_shares_count?: number;
+  
+  // Metadata
+  status: string;
+  organizer_id?: string;
+  created_at?: string;
+  updated_at?: string;
+}
+Filter System
+
+interface FilterState {
+  search: string;
+  dateRange: DateRange | undefined;
+  categories: string[];
+  locations: string[];
+  priceTypes: ('free' | 'paid')[];
+  sortBy: 'date' | 'popularity' | 'title';
+  viewMode: 'grid' | 'list';
+}
+2. Database Schema
+Core Tables
+events
+event_registrations
+event_submissions
+profiles
+notifications
+role_history
+user_roles
+Key Relationships
+Events → Organizer (profiles)
+Registrations → Events & Users
+Submissions → Events & Submitters
+Roles → Users
+3. Authentication & Authorization
+User Roles
+Admin: Full system access
+Organizer: Event creation & management
+Attendee: Event registration & profile management
+Role Management
+Role history tracking
+Role-based access control
+Automated permission updates
+4. Event Management System
+Event Lifecycle
+Creation (Draft)
+Submission
+Review
+Publication
+Registration
+Execution
+Archive
+Event Types
+Workshops
+Networking Events
+Conferences
+Hackathons
+Guest Speaker Sessions
+5. Form Handling & Validation
+Multi-step Form Process
+
+type FormStep = 
+  | "details"    // Basic information
+  | "datetime"   // Scheduling
+  | "location"   // Venue details
+  | "image"      // Media upload
+  | "preview";   // Final review
+Validation Rules
+Title: 100 char max, alphanumeric + basic punctuation
+Description: 10-1000 characters
+Date: Future dates only
+Image: 5MB max, jpg/png/webp
+Capacity: 1-1000 attendees
+6. UI Component System
+Event Display
+Grid/List view toggle
+Responsive card layouts
+Status badges
+Progressive image loading
+Filter Components
+Date range picker
+Category selection
+Location filtering
+Price type filtering
+Search functionality
+7. Image Management
+Storage Configuration
+Bucket: event-images
+Access: Public read, authenticated write
+Size limit: 5MB
+Formats: jpg, png, webp
+Image Processing
+Automatic public URL generation
+Progressive loading
+Placeholder system
+Error handling
+8. Analytics & Monitoring
+Event Metrics
+View counts
+Registration rates
+Social sharing metrics
+Attendance tracking
+System Monitoring
+Performance metrics
+Error tracking
+User engagement
+Database query optimization
+9. Security Implementation
+Data Protection
+Row Level Security (RLS)
+Input sanitization
+File upload validation
+Role-based access control
+API Security
+Rate limiting
+Request validation
+Error handling
+Secure data transmission
+10. Performance Optimization
+Frontend Optimization
+Code splitting
+Image lazy loading
+Component memoization
+Cache management
+Database Optimization
+Indexed queries
+Efficient joins
+Query caching
+Connection pooling
+11. Future Roadmap
+Planned Features
+AI Integration
+
+Event recommendations
+Content categorization
+Automated scheduling
+Community Features
+
+Skill matching
+Resource sharing
+Mentorship connections
+Enhanced Analytics
+
+Predictive attendance
+Interest trending
+Community growth metrics
+12. Best Practices & Guidelines
+Code Standards
+TypeScript strict mode
+Component composition
+Error boundary implementation
+Comprehensive testing
+Performance Guidelines
+Optimize bundle size
+Minimize database queries
+Implement caching strategies
+Monitor API response times
+Security Guidelines
+Regular security audits
+Input validation
+Access control review
+Error handling protocols
+
+
+# SQL Best Practices for Lovable.dev
+
+SQL Migration Best Practices for Lovable Projects
+1. Pre-Migration Analysis
+
+### Required Checks
+1. Query and document all existing:
+   - Table constraints
+   - Triggers
+   - Functions
+   - RLS policies
+   - Foreign key relationships
+
+2. Use these specific queries:
+   ```sql
+   -- Get all constraints
+   SELECT conname, pg_get_constraintdef(oid)
+   FROM pg_constraint
+   WHERE conrelid = 'table_name'::regclass;
+
+   -- Get all triggers
+   SELECT tgname, pg_get_triggerdef(oid)
+   FROM pg_trigger
+   WHERE tgrelid = 'table_name'::regclass;
+Impact Assessment
+Identify all dependent objects
+Check for existing data validation
+Review audit logging implications
+Analyze RLS policy impact
+
+## 2. Migration Structure
+```markdown
+### Standard Migration Template
+```sql
+-- 1. Safety Preparations
+ALTER TABLE table_name DISABLE TRIGGER ALL;
+
+-- 2. Backup Critical Data (if needed)
+CREATE TEMPORARY TABLE tmp_backup AS
+SELECT * FROM table_name WHERE /* conditions */;
+
+-- 3. Schema Modifications
+-- Add new columns as nullable first
+ALTER TABLE table_name ADD COLUMN IF NOT EXISTS column_name data_type;
+
+-- 4. Data Migration
+-- Use temporary tables for complex updates
+CREATE TEMPORARY TABLE tmp_updates AS
+SELECT /* prepare data transformations */;
+
+-- 5. Apply Updates
+UPDATE table_name SET /* changes */
+FROM tmp_updates WHERE /* conditions */;
+
+-- 6. Add Constraints
+ALTER TABLE table_name
+    ALTER COLUMN column_name SET NOT NULL,
+    ADD CONSTRAINT /* new constraints */;
+
+-- 7. Cleanup
+ALTER TABLE table_name ENABLE TRIGGER ALL;
+DROP TABLE IF EXISTS tmp_backup;
+3. Common Pitfalls
+
+### Known Issues to Check
+1. Audit Logging Conflicts
+   - Disable triggers that access request.headers
+   - Handle audit logging separately if needed
+
+2. Constraint Violations
+   - Check for date constraints
+   - Verify capacity/price rules
+   - Validate foreign key relationships
+
+3. Lock Contention
+   - Use FOR UPDATE SKIP LOCKED for batch updates
+   - Consider table partition status
+   - Monitor concurrent access patterns
+
+4. Data Integrity
+   - Validate data before constraints
+   - Handle NULL values explicitly
+   - Consider default values carefully
+4. Testing Protocol
+
+### Required Validation Steps
+1. Pre-Migration Testing
+   - Test on copy of production data
+   - Verify all constraints
+   - Check trigger behaviors
+   - Validate RLS policies
+
+2. Migration Execution
+   - Use explicit transactions
+   - Include SAVEPOINT markers
+   - Prepare rollback procedures
+   - Log all steps
+
+3. Post-Migration Verification
+   - Verify data integrity
+   - Check constraint satisfaction
+   - Test trigger functionality
+   - Validate RLS effectiveness
+5. Performance Considerations
+
+### Optimization Guidelines
+1. Batch Processing
+   - Use batch sizes of 100-1000 rows
+   - Monitor memory usage
+   - Consider table size
+
+2. Index Management
+   - Drop/recreate indexes strategically
+   - Monitor lock acquisition
+   - Handle concurrent access
+
+3. Resource Management
+   - Monitor transaction duration
+   - Check connection pools
+   - Watch for deadlocks
+6. Documentation Requirements
+
+### Migration Documentation Template
+```sql
+/*
+Migration ID: [UUID]
+Description: [Purpose of changes]
+Dependencies:
+  - Tables: [Affected tables]
+  - Triggers: [Affected triggers]
+  - Constraints: [Affected constraints]
+  - RLS Policies: [Affected policies]
+
+Pre-Migration Checks:
+  1. [List of checks]
+  2. [Validation queries]
+
+Rollback Plan:
+  1. [Rollback steps]
+  2. [Verification steps]
+
+Post-Migration Validation:
+  1. [Validation queries]
+  2. [Success criteria]
+*/
+These additions to the knowledge base would help ensure:
+
+Consistent approach to migrations
+Better first-time success rate
+Proper handling of complex dependencies
+Reliable rollback capabilities
+Clear documentation standards
+
+These enhancements would help Lovable generate more reliable and safer SQL migrations while maintaining best practices and security standards.
+
+
+. Progressive UI Changes Pattern
+Based on the EventCard date format change we just made, here's what we learned:
+
+
+### UI Component Evolution
+1. Always analyze the full component context:
+   - Check existing state management
+   - Review current formatting utilities
+   - Identify shared styling patterns
+   - Document component dependencies
+
+2. Change Implementation Order:
+   - Start with data formatting changes
+   - Then update structural elements
+   - Finally adjust styling classes
+   - Verify accessibility maintained
+
+3. Style Migration Pattern:
+   From:
+   ```tsx
+   <div className="flex items-center">
+     <div className="flex flex-col">
+To:
+
+
+<div className="inline-flex items-center">
+Preserve existing functionality
+Minimize DOM nesting
+Maintain responsive behavior
+
+## 2. Error Learning System
+
+```markdown
+### Error Pattern Recognition
+1. Document each error encountered:
+   - Error type and context
+   - Component or file location
+   - Related dependencies
+   - Resolution steps taken
+
+2. Create Error Categories:
+   - Database constraint violations
+   - Component rendering issues
+   - State management conflicts
+   - Type safety problems
+   - Performance bottlenecks
+
+3. Resolution Templates:
+   - Standard fixes for common errors
+   - Required validation steps
+   - Testing procedures
+   - Performance implications
+3. Development Optimization Patterns
+
+### Code Evolution Guidelines
+1. Component Refactoring Triggers:
+   - Repeated style patterns
+   - Nested conditional rendering
+   - Prop drilling
+   - Performance issues
+
+2. State Management Optimization:
+   - Local vs global state decisions
+   - Form state handling
+   - Cache management
+   - Real-time updates
+
+3. UI Pattern Library:
+   - Common layout structures
+   - Responsive design patterns
+   - Animation sequences
+   - Interactive elements
+4. Quality Assurance Framework
+
+### Testing Strategy
+1. Component Testing:
+   - Visual regression tests
+   - Interaction testing
+   - Accessibility checks
+   - Performance benchmarks
+
+2. State Testing:
+   - Form validation
+   - Data persistence
+   - Error handling
+   - Loading states
+
+3. Integration Points:
+   - API interactions
+   - Database operations
+   - Authentication flows
+   - Real-time updates
+5. Performance Optimization Patterns
+
+### Performance Checklist
+1. Component Optimization:
+   - Memoization opportunities
+   - Render optimization
+   - Event handler efficiency
+   - Asset loading strategy
+
+2. Data Management:
+   - Query optimization
+   - Cache implementation
+   - Batch operations
+   - Real-time updates
+
+3. User Experience:
+   - Loading states
+   - Error feedback
+   - Interactive latency
+   - Animation performance
+6. Project Evolution Framework
+
+### Feature Development Lifecycle
+1. Planning Phase:
+   - Component architecture
+   - State management strategy
+   - Database schema impact
+   - API requirements
+
+2. Implementation Phase:
+   - Component development
+   - Database migration
+   - API integration
+   - Error handling
+
+3. Optimization Phase:
+   - Performance tuning
+   - Code refactoring
+   - Documentation updates
+   - Testing coverage
+7. Knowledge Transfer System
+
+### Documentation Standards
+1. Component Documentation:
+   - Props interface
+   - State management
+   - Side effects
+   - Performance considerations
+
+2. Database Changes:
+   - Schema modifications
+   - Migration steps
+   - Rollback procedures
+   - Data validation
+
+3. API Integration:
+   - Endpoint documentation
+   - Authentication requirements
+   - Error handling
+   - Rate limiting
+8. Learning Integration Process
+
+### Continuous Improvement
+1. Error Analysis:
+   - Log error patterns
+   - Document resolutions
+   - Update best practices
+   - Share learnings
+
+2. Performance Monitoring:
+   - Track metrics
+   - Identify bottlenecks
+   - Implement optimizations
+   - Document improvements
+
+3. Code Quality:
+   - Pattern recognition
+   - Refactoring triggers
+   - Testing coverage
+   - Documentation updates
+These additions to the knowledge base would help Lovable:
+
+Learn from past development patterns
+Anticipate potential issues
+Optimize development workflow
+Maintain consistent quality
+Improve error handling
+Streamline feature development
+Enhance documentation quality
+Foster continuous improvement
+
+
+# Task Completion Protocol
+
+## Verification Checklist
+Lovable must follow these steps for every task:
+
+1. Implementation Tracking
+   - Track each required step during implementation
+   - Document progress in real-time
+   - Flag any potential issues immediately
+
+2. Post-Implementation Verification
+   - Review all required steps
+   - Identify any incomplete or missing components
+   - Create list of remaining items
+
+3. Sequential Completion
+   - Address remaining items one at a time
+   - Document completion of each step
+   - Verify each step before moving to next
+
+4. Final Validation
+   Required checks before confirming completion:
+   - All steps fully implemented
+   - Testing completed successfully
+   - Changes validated against requirements
+   - All imports and dependencies verified
+   - Build process completes without errors
+
+5. Completion Report
+   Provide summary including:
+   - List of completed steps
+   - Any issues encountered and resolutions
+   - Testing results
+   - Validation status
+   - Any necessary follow-up items
+
+## Important Notes
+- Never mark a task complete until ALL steps are verified
+- Always provide clear documentation of completion
+- Include console logs for debugging where appropriate
+- Test all changes in the preview window
+
+# Testing Protocol Requirements
+
+## Automated Testing Requirements
+For every task completed, Lovable must:
+
+1. Unit Testing
+   - Write unit tests for new functions and components
+   - Test edge cases and error scenarios
+   - Verify input validation
+   - Test component rendering
+   - Ensure proper state management
+
+2. Integration Testing
+   - Test component interactions
+   - Verify data flow between components
+   - Test form submissions and API calls
+   - Validate database operations
+   - Check authentication flows
+
+3. UI/UX Testing
+   - Verify responsive design
+   - Test user interactions
+   - Validate form feedback
+   - Check loading states
+   - Verify error messages
+   - Test accessibility
+
+4. Performance Testing
+   - Check render performance
+   - Validate state updates
+   - Test with large datasets
+   - Verify memory usage
+   - Check network requests
+
+5. Test Documentation
+   - Document test scenarios
+   - Include test coverage reports
+   - Document edge cases tested
+   - List known limitations
+
+## Test Execution Rules
+1. All tests must pass before marking task complete
+2. Test files must be properly named and organized
+3. Tests must include clear descriptions
+4. Failed tests must be addressed immediately
+5. Console should be free of errors
+6. Preview window must show expected behavior
+
+## Validation Requirements
+- Run all test suites
+- Verify in preview window
+- Check console for errors
+- Validate against requirements
+- Document test results
+
+# Core Features First Implementation Protocol
+
+## Core Features Priority Rules
+1. Development Sequence
+   - Implement core/essential features first
+   - Verify each core feature is 100% functional
+   - Test core features thoroughly
+   - Only proceed to advanced features after core stability
+
+2. Core Feature Definition
+   Must include:
+   - Basic user authentication
+   - Primary navigation
+   - Essential CRUD operations
+   - Core business logic
+   - Basic error handling
+   - Critical security features
+   - Fundamental user flows
+   - Basic data persistence
+   - Essential API endpoints
+
+3. Verification Requirements
+   Before advancing to advanced features:
+   - All core features must be thoroughly tested
+   - Core features must have 100% test coverage
+   - All core user flows must be validated
+   - Database operations must be stable
+   - No critical bugs in core functionality
+   - Performance benchmarks must be met
+   - Security requirements must be satisfied
+
+4. Advanced Feature Prerequisites
+   Before implementing any advanced feature:
+   - Document all working core features
+   - Verify system stability
+   - Confirm resource capacity
+   - Assess impact on core features
+   - Validate scalability
+   - Check performance implications
+
+5. Implementation Order
+   Strict sequence:
+   1. Essential core features
+   2. Basic functionality testing
+   3. Core feature optimization
+   4. Security hardening
+   5. Performance tuning
+   6. Only then consider intermediate features
+   7. Finally consider advanced features
+
+## Documentation Requirements
+- Maintain list of core vs. advanced features
+- Track completion status of core features
+- Document dependencies between features
+- Record all testing results
+- Keep performance metrics
+
+# Task Completion Protocol
+
+## Verification Checklist
+Lovable must follow these steps for every task:
+
+1. Implementation Tracking
+   - Track each required step during implementation
+   - Document progress in real-time
+   - Flag any potential issues immediately
+
+2. Post-Implementation Verification
+   - Review all required steps
+   - Identify any incomplete or missing components
+   - Create list of remaining items
+
+3. Sequential Completion
+   - Address remaining items one at a time
+   - Document completion of each step
+   - Verify each step before moving to next
+
+4. Final Validation
+   Required checks before confirming completion:
+   - All steps fully implemented
+   - Testing completed successfully
+   - Changes validated against requirements
+   - All imports and dependencies verified
+   - Build process completes without errors
+
+5. Completion Report
+   Provide summary including:
+   - List of completed steps
+   - Any issues encountered and resolutions
+   - Testing results
+   - Validation status
+   - Any necessary follow-up items
+
+## Important Notes
+- Never mark a task complete until ALL steps are verified
+- Always provide clear documentation of completion
+- Include console logs for debugging where appropriate
+- Test all changes in the preview window'
+);
+
+INSERT INTO knowledge_base_rules (
+  title,
+  category,
+  description
+) VALUES (
+  'Testing Protocol Requirements',
+  'Quality Assurance',
+  '# Testing Protocol Requirements
+
+## Automated Testing Requirements
+For every task completed, Lovable must:
+
+1. Unit Testing
+   - Write unit tests for new functions and components
+   - Test edge cases and error scenarios
+   - Verify input validation
+   - Test component rendering
+   - Ensure proper state management
+
+2. Integration Testing
+   - Test component interactions
+   - Verify data flow between components
+   - Test form submissions and API calls
+   - Validate database operations
+   - Check authentication flows
+
+3. UI/UX Testing
+   - Verify responsive design
+   - Test user interactions
+   - Validate form feedback
+   - Check loading states
+   - Verify error messages
+   - Test accessibility
+
+4. Performance Testing
+   - Check render performance
+   - Validate state updates
+   - Test with large datasets
+   - Verify memory usage
+   - Check network requests
+
+5. Test Documentation
+   - Document test scenarios
+   - Include test coverage reports
+   - Document edge cases tested
+   - List known limitations
+
+## Test Execution Rules
+1. All tests must pass before marking task complete
+2. Test files must be properly named and organized
+3. Tests must include clear descriptions
+4. Failed tests must be addressed immediately
+5. Console should be free of errors
+6. Preview window must show expected behavior
+
+## Validation Requirements
+- Run all test suites
+- Verify in preview window
+- Check console for errors
+- Validate against requirements
+- Document test results'
+
+
+MEDELLIN AI PLATFORM - ROADMAP CLASSIFICATION SYSTEM
+📋 STATUS CLASSIFICATION
+Every feature MUST be marked with one of these status indicators:
+
+✅ COMPLETED
+- Fully implemented
+- Tested in production
+- Documentation complete
+- No known major issues
+
+🚧 PARTIAL
+- Implementation started
+- Core functionality exists
+- Needs enhancement
+- Missing documentation
+- Has known issues
+
+❌ NOT STARTED
+- Planned feature
+- No implementation
+- In backlog
+🎯 PRIORITY LEVELS
+P1: CORE
+Features that define the minimum viable platform:
+
+User authentication/authorization
+Basic CRUD operations
+Essential navigation
+Data persistence
+Error handling
+Security features
+P2: INTERMEDIATE
+Features that enhance platform usability:
+
+User experience improvements
+Additional functionality
+Performance optimizations
+Enhanced workflows
+Community features
+Analytics basics
+P3: ADVANCED
+Complex features that expand platform capabilities:
+
+Advanced integrations
+Complex workflows
+Advanced analytics
+Performance optimizations
+Scale handling
+Advanced security
+P4: AUTOMATION
+AI and automation features:
+
+AI-powered features
+Automated workflows
+Intelligent recommendations
+Predictive analytics
+Process automation
+Smart optimizations
+📊 TRACKING REQUIREMENTS
+Each feature entry MUST include:
+
+1. Feature Name
+2. Status Indicator (✅,🚧,❌)
+3. Priority Level (P1-P4)
+4. Dependencies
+5. Completion % (0-100)
+6. Timeline
+7. Component Type
+8. Resource Requirements
+🔍 COMPONENT TYPES
+1. PAGE COMPONENTS
+- Complete routes/pages
+- URL accessible
+- User interface screens
+
+2. FEATURE COMPONENTS
+- Reusable modules
+- Business logic
+- Feature-specific functionality
+
+3. UI COMPONENTS
+- Interface elements
+- Design system components
+- Reusable UI parts
+
+4. SYSTEM COMPONENTS
+- Infrastructure
+- Backend services
+- Database operations
+- Security implementations
+📝 FEATURE ENTRY TEMPLATE
+Feature: [Name]
+Status: [✅,🚧,❌]
+Priority: [P1-P4]
+Type: [Page/Feature/UI/System]
+Dependencies: [List]
+Completion: [0-100%]
+Timeline: [Date/Sprint]
+Resources: [Required Resources]
+Description: [Brief Description]
+Components:
+- Component 1 [Status]
+- Component 2 [Status]
+- Component 3 [Status]
+Notes: [Additional Information]
+⚡ QUICK REFERENCE
+Priority Guide:
+
+P1 (CORE) = Must have
+P2 (INTERMEDIATE) = Should have
+P3 (ADVANCED) = Nice to have
+P4 (AUTOMATION) = Future enhancement
+Status Guide:
+
+✅ = Production ready
+🚧 = In progress/partial
+❌ = Not started
+
+
+
+This rule will establish:
+
+General Structure
+
+Required header information
+Consistent section organization
+Clear separation of different types of changes
+Formatting Standards
+
+Proper indentation (4 spaces)
+Strategic line breaks
+Consistent alignment of related elements
+Comment Requirements
+
+Block comments for sections
+Inline comments for clarification
+Required documentation elements
+Template Structure
+
+Standard header format
+Section dividers
+Statement grouping
+The resulting SQL should look like this:
+
+Key formatting rules:
+
+Clear section headers with numbering
+Consistent indentation (4 spaces)
+Aligned columns in CREATE TABLE statements
+Vertical alignment of related elements
+Clear separation between major sections
+Descriptive comments for each section
+Proper spacing around operators and after commas
+Uppercase for SQL keywords
+Clear header block with migration information
+
+
+
+Core Development Roles
+Events System Architect (Technical Lead)
+
+Primary system architecture design
+Event registration and booking system design
+Database schema and API architecture (Supabase)
+Security and authentication flows
+Real-time features implementation
+Performance optimization
+Event Dashboard Developer
+
+Admin dashboard implementation
+Data visualization and analytics
+Sponsor management interface
+Attendee management tools
+Ticketing system UI
+Performance monitoring tools
+Ticket System Developer
+
+Booking and payment systems
+QR code generation for check-ins
+Attendee check-in system
+Waitlist management
+Automated notifications
+Payment processing integration
+Frontend Developer (Lovable & React)
+
+Responsive UI components
+React Query state management
+Mobile-first design implementation
+Component optimization
+UI/UX improvements
+Performance optimization
+Management Roles
+Database Architect (Admin)
+
+Database design and optimization
+Supabase integration
+Security implementation
+Performance tuning
+Backup and recovery
+Integration management
+Marketing & Communications Manager
+
+Marketing strategy
+Social media management
+Email marketing campaigns
+Content strategy
+Analytics tracking
+Brand management
+Event Planning Manager
+
+Event strategy development
+Resource allocation
+Timeline management
+Budget control
+Vendor coordination
+Risk assessment
+Specialist Roles
+Content Strategist
+
+SEO optimization
+Event descriptions
+Speaker bios
+Marketing copy
+Metadata structure
+Content guidelines
+QA Specialist
+
+Functional testing
+Usability testing
+Security testing
+Performance testing
+Cross-device testing
+Bug tracking
+Community Manager
+
+Community engagement
+Social media presence
+WhatsApp group management
+Email communications
+Event promotion
+Attendee support
+Each role should include:
+
+Access level (Admin/Manager/Specialist)
+Key responsibilities
+Required skills
+Access permissions
+Reporting structure
+
+
+
+Project Dashboard Rules
+Project Ownership and Access
+
+
+- Projects must have a valid owner_id matching the authenticated user
+- Project ownership transfer must maintain task relationships
+- Each project must have a clear owner for accountability
+Project Data Requirements
+
+
+- Every project must have:
+  - A unique title
+  - A valid status (planning, active, on_hold, completed)
+  - An owner_id matching the authenticated user
+  - A created_at timestamp
+  - An updated_at timestamp
+Project Metrics Management
+
+
+- One-to-one relationship between projects and project_metrics
+- Project metrics must be initialized when project is created
+- Metrics should track:
+  - Total tasks count
+  - Completed tasks count
+  - Progress percentage
+  - Time estimates
+Task Management Rules
+
+
+- Tasks must be associated with a valid project_id
+- Task status changes must trigger project metrics updates
+- Task dependencies must be validated
+- Task status flow: todo -> in_progress -> review -> completed
+Dashboard Display Rules
+
+
+- Projects should display:
+  - Project title and description
+  - Current status with appropriate badge
+  - Progress bar showing completion percentage
+  - Task counts (total and completed)
+  - Start date in readable format
+Project Creation Guidelines
+
+
+- Project title must be unique per user
+- Default status should be "planning"
+- Initial project metrics must be created
+- Owner must be set to current authenticated user
+Project State Management
+
+
+- Use React Query for project data fetching
+- Implement proper error handling
+- Show loading states during data fetching
+- Handle empty states appropriately
+Security Rules
+
+
+- Only project owners can view their projects
+- Project data must be protected by RLS policies
+- Authentication required for all project operations
+- Validate user permissions before operations
+Project Updates and Modifications
+
+
+- Track all project status changes
+- Maintain update timestamps
+- Validate project modifications
+- Ensure metrics stay in sync
+Error Handling Guidelines
+
+
+- Display user-friendly error messages
+- Handle authentication errors gracefully
+- Show appropriate loading states
+- Provide feedback for all user actions
+Project Metrics Calculations
+
+
+- Progress = (completed_tasks / total_tasks) * 100
+- Update metrics on task status changes
+- Initialize metrics with default values
+- Maintain one-to-one relationship with projects
+Project Display Order
+
+
+- Sort projects by created_at descending
+- Group projects by status
+- Show active projects first
+- Include clear status indicators
+
+Get the basic functionality working first
+Test the core features
+Ensure data flow is working
+Validate user interactions
