@@ -9,7 +9,7 @@ import React from "react"
 import { Button } from "@/components/Button"
 import MedellinAILogo from "../MedellinAILogo"
 
-export function Navbar() {
+export function NavBar() {
   const [open, setOpen] = React.useState(false)
   const scrolled = useScroll(15)
 
@@ -43,13 +43,13 @@ export function Navbar() {
         <div className="flex items-center space-x-4">
           <div className="hidden sm:flex space-x-3">
             <Button
-              variant="outline"
+              variant="secondary"
               className="h-10 font-medium"
             >
               Login
             </Button>
             <Button
-              variant="default"
+              variant="primary"
               className="h-10 font-medium"
             >
               Register
@@ -99,13 +99,13 @@ export function Navbar() {
           </ul>
           <div className="flex flex-col space-y-3 mt-6">
             <Button
-              variant="outline"
+              variant="secondary"
               className="w-full font-medium"
             >
               Login
             </Button>
             <Button
-              variant="default"
+              variant="primary"
               className="w-full font-medium"
             >
               Register
@@ -117,4 +117,4 @@ export function Navbar() {
   )
 }
 
-export default Navbar
+export default NavBar
