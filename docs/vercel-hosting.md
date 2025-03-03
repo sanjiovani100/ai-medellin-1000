@@ -30,9 +30,26 @@ The AI Medellin project has the following key components:
 
 ## Vercel Configuration
 
-### Current Configuration
+### Updated Configuration
 
-The `vercel.json` file in the root directory is configured to build and deploy the Solar template:
+We've updated the `vercel.json` file to use a rewrites approach instead of build commands:
+
+```json
+{
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/template-solar/$1" }
+  ]
+}
+```
+
+This configuration:
+1. Redirects all requests from the root URL to the template-solar directory
+2. Simplifies the configuration by avoiding potential conflicts with dashboard settings
+3. Works better with Vercel's default behavior for monorepo structures
+
+### Previous Configuration (Not Working)
+
+Our previous configuration had issues with Vercel's dashboard settings:
 
 ```json
 {
@@ -43,22 +60,37 @@ The `vercel.json` file in the root directory is configured to build and deploy t
 }
 ```
 
-This configuration:
-1. Tells Vercel to treat the project as a Next.js application
-2. Directs the build process to the Solar template directory
-3. Specifies that the output from the Solar template build becomes the main deployed website
+### Why the Solar Template Wasn't Showing as Main
 
-### Alternative Configuration
+After reviewing the project and Vercel settings, we identified several reasons why the Solar template wasn't appearing as the main site:
 
-If the current configuration doesn't work, this alternative can be tried:
+1. **Root Directory Mismatch**: The Vercel dashboard had the Root Directory setting empty, but our build commands were trying to run from the template-solar directory. This created a conflict.
 
-```json
-{
-  "rewrites": [
-    { "source": "/(.*)", "destination": "/template-solar/$1" }
-  ]
-}
-```
+2. **Build Command Confusion**: The `cd template-solar` prefix in the build commands was causing issues because Vercel already executes commands relative to the Root Directory setting.
+
+3. **Path Resolution Issues**: Without proper rewrites, Vercel was trying to serve files from the wrong location, leading to the main site showing the basic Next.js app instead of the Solar template.
+
+4. **Dashboard vs. Configuration File**: There was a conflict between settings in the Vercel dashboard UI and in our vercel.json file.
+
+### Steps Taken to Fix the Issue
+
+We took the following steps to resolve the Solar template deployment issues:
+
+1. ✅ **Switched to Rewrites Approach**
+   - Updated vercel.json to use the simpler and more reliable rewrites method
+   - This approach works regardless of Root Directory setting
+   - Pushed changes to GitHub
+
+2. ✅ **Created Comprehensive Documentation**
+   - Added detailed troubleshooting steps in vercel-hosting-revised.md
+   - Created a prompt template for requesting AI assistance
+   - Documented all approaches for fixing the issue
+
+3. ✅ **Identified Dashboard Setting Conflicts**
+   - Documented that the Root Directory setting should either:
+     - Be set to "template-solar" if using the build command approach
+     - Be left empty if using the rewrites approach
+   - Added instructions for checking build logs and verifying settings
 
 ### Implementation Steps Completed
 
@@ -69,8 +101,9 @@ We've taken several steps to set up the Vercel deployment:
    - Pushed changes to GitHub repository
 
 2. ✅ **Added deployment configuration**
-   - Created `vercel.json` with configuration pointing to Solar template
-   - Set up proper build and install commands
+   - Initially created `vercel.json` with build command configuration
+   - Updated to rewrites approach for better compatibility
+   - Set up proper project structure
 
 3. ✅ **Added necessary configuration files**
    - Added postcss.config.mjs
@@ -119,8 +152,8 @@ When you push changes to your GitHub repository:
 
 1. Vercel detects the push and starts a new deployment
 2. It reads the `vercel.json` configuration
-3. It follows the specified build commands, focusing on the `/template-solar/` directory
-4. It deploys the built Solar template site to your main URL
+3. With the rewrites configuration, it serves all requests from the template-solar directory
+4. It deploys the built application to your main URL
 
 ### Current Deployment Status
 
@@ -128,6 +161,7 @@ Currently, there are two deployments:
 
 1. **Main URL**: https://ai-medellin-1000.vercel.app/
    - Should display the Solar template (currently showing a basic Next.js app)
+   - After the rewrites configuration update, this should now show the Solar template
 
 2. **Solar Template URL**: https://ai-medellin-1000-1w9ygi7lc-ai-socialmediavs-projects.vercel.app/
    - Requires Vercel login to access
@@ -137,7 +171,7 @@ Currently, there are two deployments:
 
 ### Issue: Main Site Not Showing Solar Template
 
-To resolve this issue:
+If after the rewrites update the main site still doesn't show the Solar template:
 
 #### 1. Manual Vercel Deployment Trigger
 
@@ -152,15 +186,24 @@ Log into your Vercel dashboard and trigger a manual redeploy:
 If redeploying doesn't help:
 1. Go to the latest deployment
 2. Click "View Build Logs"
-3. Look for any errors related to the build command or configuration
+3. Look for any errors related to the configuration
 
 #### 3. Verify Project Settings
 
 Ensure your Vercel project settings are correct:
 1. Go to the project settings
-2. Check that the "Root Directory" is set to `/` (not a subdirectory)
-3. Verify that the "Framework Preset" is Next.js
-4. Check that there's no conflicting build command in the Vercel UI settings
+2. For the rewrites approach:
+   - Root Directory should be empty (not specified)
+   - Framework Preset should be Next.js
+   - Let Vercel use its default build, install, and output settings
+
+#### 4. Try Setting Root Directory Directly
+
+If rewrites don't work, try this alternative:
+1. Go to Vercel project settings
+2. Set "Root Directory" to `template-solar`
+3. Use default build and install commands (no need for cd prefix)
+4. Redeploy the project
 
 ### Issue: Preview Deployment Requires Login
 
@@ -198,4 +241,4 @@ Once deployment issues are resolved:
 
 The AI Medellin project is set up with a robust deployment configuration using Vercel, with the Solar template as the main user interface. The Vercel MCP server integration provides powerful AI-assisted deployment management capabilities.
 
-After resolving the current deployment issues, you'll have a solid foundation for continued development of the AI Medellin event platform.
+After implementing the rewrites approach and pushing to GitHub, the Solar template should now appear at your main URL. If it doesn't, follow the troubleshooting steps above to resolve any remaining issues.
