@@ -147,7 +147,7 @@ mkdir -p src/lib
 
 ## Step 5: Customize for AI Medellin
 🔴 **Remaining**
-
+DO NOT ADD THESE STEPS
 1. Update branding elements:
    - Change the site name to "AI Medellin"
    - Update the description for an AI-powered event platform

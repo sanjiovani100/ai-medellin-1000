@@ -37,6 +37,43 @@ This repository contains:
    C:\Users\sanji\0-roo-code\run-vercel-mcp.bat
    ```
 
+## Environment Variables
+
+The application uses environment variables for configuration across different environments. These are handled securely and type-safely with Zod validation.
+
+### Environment Files
+
+- `.env.local` - Local development overrides (not committed to version control)
+- `.env.development` - Development-specific variables
+- `.env.production` - Production-specific variables
+- `.env.example` - Template for required environment variables
+
+### Required Environment Variables
+
+| Variable             | Description                             | Required | Default      |
+|----------------------|-----------------------------------------|----------|--------------|
+| NODE_ENV             | Environment mode                        | Yes      | development  |
+| DATABASE_URL         | PostgreSQL database connection string   | Yes      | -            |
+| DATABASE_AUTH_TOKEN  | Auth token for database access          | Yes      | -            |
+| DATABASE_POOL_SIZE   | Number of database connections          | No       | 10           |
+| APP_URL              | Application URL                         | Yes      | -            |
+| APP_SECRET           | Secret key for encryption/security      | Yes      | -            |
+| AUTH_PROVIDER        | Authentication provider                 | No       | supabase     |
+| AUTH_SECRET          | Authentication secret key               | Yes      | -            |
+| API_BASE_URL         | External API base URL                   | No       | -            |
+| API_TIMEOUT          | API request timeout in milliseconds     | No       | 30000        |
+| CACHE_TTL            | Cache time-to-live in seconds           | No       | 300          |
+| LOG_LEVEL            | Application logging level               | No       | info         |
+| ENABLE_ANALYTICS     | Toggle for analytics features           | No       | false        |
+| ENABLE_WHATSAPP      | Toggle for WhatsApp integration         | No       | false        |
+
+### Setting Up Environment Variables
+
+1. Copy `.env.example` to `.env.local`
+2. Update values in `.env.local` for your local development
+3. The application will load environment-specific variables based on the NODE_ENV
+4. All environment variables are validated using Zod in `src/env.ts`
+
 ## Project Structure
 
 - `/src` - Main Next.js application code
