@@ -6,88 +6,115 @@ import { cx } from "@/lib/utils"
 import { RiCloseFill, RiMenuFill } from "@remixicon/react"
 import Link from "next/link"
 import React from "react"
-import { SolarLogo } from "../../../public/SolarLogo"
-import { Button } from "../Button"
+import { Button } from "@/components/Button"
+import MedellinAILogo from "../MedellinAILogo"
 
-export function NavBar() {
+export function Navbar() {
   const [open, setOpen] = React.useState(false)
   const scrolled = useScroll(15)
 
   return (
     <header
       className={cx(
-        "fixed inset-x-4 top-4 z-50 mx-auto flex max-w-6xl justify-center rounded-lg border border-transparent px-3 py-3 transition duration-300",
+        "fixed top-0 w-full z-50 bg-background/80 backdrop-blur-sm border-b transition duration-300",
         scrolled || open
-          ? "border-gray-200/50 bg-white/80 shadow-2xl shadow-black/5 backdrop-blur-sm"
-          : "bg-white/0",
+          ? "border-gray-200/50 shadow-md shadow-black/5"
+          : "border-transparent"
       )}
     >
-      <div className="w-full md:my-auto">
-        <div className="relative flex items-center justify-between">
+      <div className="container mx-auto flex items-center justify-between h-16 px-4">
+        <div className="flex items-center">
           <Link href={siteConfig.baseLinks.home} aria-label="Home">
-            <span className="sr-only">Solar Tech Logo</span>
-            <SolarLogo className="w-22" />
+            <span className="sr-only">Medellin AI Logo</span>
+            <MedellinAILogo />
           </Link>
-          <nav className="hidden sm:block md:absolute md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:transform">
-            <div className="flex items-center gap-10 font-medium">
-              <Link className="px-2 py-1 text-gray-900" href="#solutions">
-                Solutions
+          <nav className="hidden md:flex ml-10 space-x-8">
+            {siteConfig.navigation.map((item) => (
+              <Link 
+                key={item.name} 
+                className="px-2 py-1 text-gray-900 hover:text-gray-600 transition-colors" 
+                href={item.href}
+              >
+                {item.name}
               </Link>
-              <Link className="px-2 py-1 text-gray-900" href="#farm-management">
-                Farm Management
-              </Link>
-              <Link className="px-2 py-1 text-gray-900" href="#solar-analytics">
-                Analytics
-              </Link>
-            </div>
+            ))}
           </nav>
-          <Button
-            variant="secondary"
-            className="hidden h-10 font-semibold sm:block"
-          >
-            Get a quote
-          </Button>
+        </div>
+        <div className="flex items-center space-x-4">
+          <div className="hidden sm:flex space-x-3">
+            <Button
+              variant="outline"
+              className="h-10 font-medium"
+            >
+              Login
+            </Button>
+            <Button
+              variant="default"
+              className="h-10 font-medium"
+            >
+              Register
+            </Button>
+          </div>
           <Button
             onClick={() => setOpen(!open)}
-            variant="secondary"
+            variant="ghost"
             className="p-1.5 sm:hidden"
-            aria-label={open ? "CloseNavigation Menu" : "Open Navigation Menu"}
+            aria-label={open ? "Close Navigation Menu" : "Open Navigation Menu"}
+            aria-expanded={open}
+            aria-controls="mobile-menu"
           >
             {!open ? (
               <RiMenuFill
                 className="size-6 shrink-0 text-gray-900"
-                aria-hidden
+                aria-hidden="true"
               />
             ) : (
               <RiCloseFill
                 className="size-6 shrink-0 text-gray-900"
-                aria-hidden
+                aria-hidden="true"
               />
             )}
           </Button>
         </div>
-        <nav
-          className={cx(
-            "mt-6 flex flex-col gap-6 text-lg ease-in-out will-change-transform sm:hidden",
-            open ? "" : "hidden",
-          )}
-        >
+      </div>
+      <div
+        id="mobile-menu"
+        className={cx(
+          "mt-0 transition-all duration-300 ease-in-out overflow-hidden md:hidden",
+          open ? "max-h-96" : "max-h-0"
+        )}
+      >
+        <nav className="container mx-auto px-4 py-3">
           <ul className="space-y-4 font-medium">
-            <li onClick={() => setOpen(false)}>
-              <Link href="#solutions">Solutions</Link>
-            </li>
-            <li onClick={() => setOpen(false)}>
-              <Link href="#farm-management">Farm Management</Link>
-            </li>
-            <li onClick={() => setOpen(false)}>
-              <Link href="#solar-analytics">Analytics</Link>
-            </li>
+            {siteConfig.navigation.map((item) => (
+              <li key={item.name} onClick={() => setOpen(false)}>
+                <Link 
+                  href={item.href}
+                  className="block py-2 text-gray-900 hover:text-gray-600 transition-colors"
+                >
+                  {item.name}
+                </Link>
+              </li>
+            ))}
           </ul>
-          <Button variant="secondary" className="text-lg">
-            Get a quote
-          </Button>
+          <div className="flex flex-col space-y-3 mt-6">
+            <Button
+              variant="outline"
+              className="w-full font-medium"
+            >
+              Login
+            </Button>
+            <Button
+              variant="default"
+              className="w-full font-medium"
+            >
+              Register
+            </Button>
+          </div>
         </nav>
       </div>
     </header>
   )
 }
+
+export default Navbar
