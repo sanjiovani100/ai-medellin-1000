@@ -1,8 +1,5 @@
 {
   "buildCommand": "npm run build",
   "installCommand": "npm install",
-  "framework": "nextjs",
-  "rewrites": [
-    { "source": "/(.*)", "destination": "/template-solar/$1" }
-  ]
+  "framework": "nextjs"
 }
